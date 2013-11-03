@@ -2,6 +2,7 @@
 var utils = require('strider-git/lib')
   , gravatar = require('gravatar')
   , exec = require('child_process').exec
+  , async = require('async')
 
 module.exports = {
   config: {
@@ -25,7 +26,6 @@ module.exports = {
   routes: function (app, context) {
     app.anon.post(':secret', function (req, res) {
       var config = req.providerConfig()
-      console.log('got req~', req.body)
       if (req.params.secret !== config.secret) {
         return res.send(400, 'Invalid Secret')
       }
@@ -39,6 +39,24 @@ module.exports = {
       req.project.addBranch(req.body.branch, function (err) {
         if (err) return console.error('failed to add branch: ', err.message, err.stack)
         context.emitter.emit('job.prepare', job)
+      })
+    })
+    app.anon.del(':secret', function (req, res) {
+      var config = req.providerConfig()
+      if (req.params.secret !== config.secret) {
+        return res.send(400, 'Invalid Secret')
+      }
+      async.parallel([
+        req.project.remove.bind(req.project),
+        function (next) {
+          var now = new Date()
+          context.models.Job.update({project: req.project.name},
+                                    {$set: {archived: now}},
+                                    {multi: true}, next)
+        }
+      ], function (err) {
+        if (err) return res.send(500, 'Error removing project')
+        res.send(204)
       })
     })
   }
