@@ -1,0 +1,24 @@
+<div>
+  <!--div class="btn-group">
+    <div class="btn" ng-model="config.scm" required btn-radio="'git'">Git</div>
+    <div class="btn" ng-model="config.scm" required btn-radio="'hg'">Mercurial</div>
+  </div-->
+  <label>
+    <span>Path</span>
+    <input required
+           type="text"
+           ng-model="config.path"
+           placeholder="/abs/path/to/my/repo">
+  </label>
+</div>
+<label class="checkbox">
+  <input ng-model="config.cache" type="checkbox"> cache data
+</label>
+<label>
+  <span>Secret</span>
+  <input ng-model="config.secret">
+</label>
+<div class="help-text">
+  The secret is used when your commit-hook triggers a build.
+</div>
+<button ng-click="save()" ng-disabled="saving" ng-hide="projectsPage">Save</button>
