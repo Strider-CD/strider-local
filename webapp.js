@@ -17,11 +17,14 @@ module.exports = {
       utils.processBranches(stdout, done)
     })
   },
-  // native git doesn't have a great way to just get a single file at an arbitrary revision
-  fastFile: false,
+  fastFile: true,
   getFile: function (filename, ref, config, project, done) {
-    done(new Error('not implemented'));
-    // utils.gitcmd('git archive --remote=' + url + ' ' + (ref.fetch || ref.id) + ' .strider.json', ...);
+    exec('git show ' + (ref.id || ref.branch) + ':' + filename, {
+      cwd: config.path
+    }, function (err, stdout, stderr) {
+      if (err) return done(err)
+      return done(null, stdout)
+    })
   },
   routes: function (app, context) {
     app.anon.post(':secret', function (req, res) {
