@@ -41,11 +41,11 @@ function auth(user, pass, next) {
 
 function get(program, name, prompt, next) {
   if (program[name]) {
-    if (program.host = validate.host(program[name])) return next()
+    if (program.host = validate.host(program[name], program)) return next()
     return next(new Error('Invalid ' + name))
   }
   program.prompt(prompt, function (val) {
-    if (program[name] = validate[name](program[name])) return next()
+    if (program[name] = validate[name](program[name], program)) return next()
     return next(new Error('Invalid ' + name))
   })
 }
