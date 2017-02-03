@@ -1,5 +1,7 @@
 ## Local provider
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Strider-CD/strider-local.svg)](https://greenkeeper.io/)
+
 Test locally! Have a local strider instance test every commit you make.
 
 ## Usage:
